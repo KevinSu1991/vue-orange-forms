@@ -30,11 +30,13 @@
       :seq-config="{startIndex: ((productInfoWidgetCurrentPage - 1) * productInfoWidgetPageSize)}"
       :sort-config="{remote: true}"
       :hasExtend="false"
-       :hasSearchString="true"
       @sort-change="productInfoWidget.onSortChange"
       @refresh="productInfoWidget.refreshTable()"
     >
       <vxe-column title="序号" type="seq" fixed="left" :index="productInfoWidget.getTableIndex" :width="80" />
+      <vxe-column field="name" title="产品名称" min-width="150" />
+      <vxe-column field="createdTs" title="创建时间" width="180" />
+      <vxe-column field="updatedTs" title="更新时间" width="180" />
       <template slot="empty">
         <div class="table-empty unified-font">
           <img src="@/assets/img/empty.png">
@@ -88,8 +90,6 @@ import { DictionaryController } from '@/api/system';
 import { treeDataTranslate, findItemFromList, findTreeNodePath, findTreeNode, stringCase } from '@/common/utils';
 import { ProductInfoData } from '@/api/system/productInfoController';
 import { ProductInfoController } from '@/api/system';
-import DeptSelect from '@/components/DeptSelect/index.vue';
-import UserSelect from '@/components/UserSelect/index.vue';
 
 const router = useRouter();
 const route = useRoute();
@@ -153,10 +153,10 @@ const loadProductInfoWidgetData = (params: ANY_OBJECT) => {
     ...params,
   };
   return new Promise((resolve, reject) => {
-    const searchString = productInfo.value ? productInfo.value.getSearchString() : undefined;
-    if (searchString && searchString !== '') {
+    // 将搜索条件添加到请求参数
+    if (formFilter.nameFilter) {
       if (params.productInfoDtoFilter == null) params.productInfoDtoFilter = {};
-      params.productInfoDtoFilter.searchString = searchString;
+      params.productInfoDtoFilter.name = formFilter.nameFilter;
     }
     ProductInfoController.list(params).then(res => {
       resolve({
