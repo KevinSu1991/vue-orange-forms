@@ -12,6 +12,12 @@ module.exports = {
     open: true,
     host: '0.0.0.0', // 允许外部ip访问
     port: 8085, // 端口
+    // proxy: {
+    //   '/api': {
+    //     target: 'http://your-api-server.com',
+    //     changeOrigin: true,
+    //   },
+    // },
   },
   css: {
     loaderOptions: {
